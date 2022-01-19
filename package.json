@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "A simple Node app built on fastify, instantly up and running.",
   "scripts": {
-    "start": "node series.js"
+    "start": "node auto.js"
   },
   "dependencies": {
     "async": "^3.2.3"
