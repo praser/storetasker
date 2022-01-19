@@ -1,43 +1,45 @@
-const async = require("async");
+var async = require('async');
 
-const callWhenDone = function (err) {
-  if (err) {
-    console.log("ERROR", err);
-  } else {
-    console.log("SUCCESS");
-  }
-};
+var callWhenDone = function(err) {
+	if (err) {
+		console.log('ERROR', err);
+	} else {
+		console.log('SUCCESS');
+	}
+}
 
-const autoCalculate = function (first, second, callback) {
-  async.auto(
-    {
-      first: function (done) {
-          console.log("first", first * 5);
-          done(false, first * 5);
-      },
+var autoCalculate = function (first, second, callback) {
+	async.auto({
 
-      second: function (done) {
-        console.log("second", second - 2);
-        done(false, second - 2);
-      },
+		firstTimesFive: function(done) {
+			setTimeout(function() {
+				console.log('firstTimesFive', first*5);
+				done(null, first*5);
+			}, 3000);
+		},
 
-      sumTheResult: [
-        "first",
-        "second",
-        function (results, done) {
-          console.log(
-            "sumTheResult",
-            results.first + results.second
-          );
-          done(false, results.first + results.second);
-        },
-      ],
-    },
-    function (err, results) {
-      console.log(results.squareIt);
-      callback(err);
-    }
-  );
-};
+		secondMinusTwo: function(done) {
+			console.log('secondMinusTwo', second-2);
+			done(null, second-2);
+		},
+
+		sumTheResult: ['firstTimesFive', 'secondMinusTwo', function(results, done) {
+			console.log('sumTheResult', results.firstTimesFive + results.secondMinusTwo);
+			done(null, results.firstTimesFive + results.secondMinusTwo);
+		}],
+
+		squareIt: ['sumTheResult', function(results, done) {
+			setTimeout(function() {
+				console.log('squareIt', results.sumTheResult*results.sumTheResult);
+				done(null, results.sumTheResult*results.sumTheResult);
+			}, 3000);
+		}]
+
+	}, function(err, results) {
+		console.log(results.squareIt);
+		callback(err);
+	});
+
+}
 
 autoCalculate(2, 5, callWhenDone);
